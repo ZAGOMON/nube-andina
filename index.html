@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nube Andina | Ideas que se ven</title>
+<meta name="description" content="Videos promocionales, animación 3D, menús y sitios web para restaurantes y negocios en Bolivia.">
+<link rel="icon" href="assets/nube-andina-avatar.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#12283f; --navy-2:#1b4365; --ink:#0c1b2b;
+  --teal:#4dbfb9; --gold:#f4b94f; --snow:#f5f8fb;
+  --muted:#a9bfd3; --line:rgba(255,255,255,.12);
+  --card:rgba(255,255,255,.05);
+  /* aguayo palette */
+  --rojo:#c8202f; --naranja:#e8641c; --magenta:#c2185b; --verde:#2e9e5b; --morado:#5b2a86;
+  --adobe:#f4ead9; --tierra:#8a3b1f;
+  --aguayo:repeating-linear-gradient(90deg,
+    var(--rojo) 0 18px, var(--naranja) 18px 26px, var(--gold) 26px 32px, var(--verde) 32px 40px,
+    var(--magenta) 40px 56px, var(--snow) 56px 59px, var(--morado) 59px 70px, var(--teal) 70px 78px,
+    var(--gold) 78px 82px, var(--rojo) 82px 100px);
+}
+.aguayo{height:10px;background:var(--aguayo)}
+.aguayo.thin{height:6px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,sans-serif;background:var(--ink);color:var(--snow);line-height:1.6}
+a{color:inherit}
+img{max-width:100%;display:block}
+.wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:Sora,Inter,sans-serif;line-height:1.15}
+h2{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:.6rem}
+.eyebrow{color:var(--teal);font-weight:600;letter-spacing:.12em;text-transform:uppercase;font-size:.78rem;margin-bottom:.6rem}
+.lead{color:var(--muted);max-width:640px;font-size:1.05rem}
+section{padding:90px 0}
+
+/* nav */
+nav{position:sticky;top:0;z-index:20;background:rgba(12,27,43,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:Sora;font-weight:800;font-size:1.1rem}
+.brand svg{width:38px;height:30px}
+.links{display:flex;gap:26px;font-size:.92rem}
+.links a{text-decoration:none;color:var(--muted)}
+.links a:hover{color:var(--snow)}
+.btn{display:inline-block;background:var(--gold);color:var(--ink);font-weight:600;text-decoration:none;padding:12px 22px;border-radius:999px;transition:transform .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--snow);border:1px solid var(--line)}
+nav .btn{padding:9px 18px;font-size:.9rem}
+
+/* hero */
+.hero{background:
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72'%3E%3Cpath d='M28 12h16v8h8v8h8v16h-8v8h-8v8H28v-8h-8v-8h-8V28h8v-8h8z' fill='none' stroke='%23ffffff' stroke-opacity='.05' stroke-width='2'/%3E%3Crect x='32' y='32' width='8' height='8' fill='%23f4b94f' fill-opacity='.08'/%3E%3C/svg%3E"),
+  linear-gradient(180deg,var(--navy),var(--navy-2));overflow:hidden;position:relative;padding:80px 0 0}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(2.4rem,6vw,4.2rem);font-weight:800}
+.hero h1 span{color:var(--gold)}
+.hero p{color:var(--muted);font-size:1.1rem;margin:18px 0 30px;max-width:520px}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap}
+.scene{position:relative;aspect-ratio:1/1;max-width:460px;width:100%;margin-left:auto}
+.scene svg{width:100%;height:100%}
+.sun{animation:rise 6s ease-in-out infinite alternate}
+.cloud{animation:drift 9s ease-in-out infinite alternate}
+.peak{transform-origin:center bottom;animation:breathe 5s ease-in-out infinite alternate}
+.peak.b{animation-delay:-2s}
+@keyframes rise{from{transform:translateY(18px)}to{transform:translateY(-14px)}}
+@keyframes drift{from{transform:translateX(-22px)}to{transform:translateX(22px)}}
+@keyframes breathe{from{transform:scaleY(.96)}to{transform:scaleY(1.03)}}
+.strip{margin-top:0;background:var(--ink);padding:18px 0;color:var(--muted);font-size:.9rem;overflow:hidden;white-space:nowrap}
+.strip div{display:inline-block;animation:marquee 30s linear infinite}
+.strip b{color:var(--teal);margin:0 18px}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* services */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;margin-top:40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;transition:border-color .2s,transform .2s}
+.card:hover{border-color:var(--teal);transform:translateY(-3px)}
+.card .ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(77,191,185,.15);color:var(--teal);font-size:1.3rem;margin-bottom:14px}
+.card h3{font-size:1.08rem;margin-bottom:6px}
+.card p{color:var(--muted);font-size:.94rem}
+.card{position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--aguayo);opacity:0;transition:opacity .2s}
+.card:hover::before{opacity:1}
+.card:nth-child(4n+1) .ico{background:rgba(200,32,47,.18);color:#ff6b78}
+.card:nth-child(4n+2) .ico{background:rgba(244,185,79,.18);color:var(--gold)}
+.card:nth-child(4n+3) .ico{background:rgba(46,158,91,.2);color:#5fd393}
+.card:nth-child(4n+4) .ico{background:rgba(194,24,91,.2);color:#ff6fa8}
+.card .tag{display:inline-block;margin-top:12px;font-size:.75rem;color:var(--gold);border:1px solid rgba(244,185,79,.35);padding:2px 10px;border-radius:999px}
+
+/* work */
+.work{background:linear-gradient(180deg,var(--ink),#0f2236)}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}
+.shot{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:4/5;background:#000}
+.shot img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.shot:hover img{transform:scale(1.05)}
+.shot figcaption{position:absolute;inset:auto 0 0 0;padding:40px 18px 16px;background:linear-gradient(transparent,rgba(0,0,0,.8))}
+.shot figcaption b{display:block;font-family:Sora}
+.shot figcaption small{color:var(--muted)}
+.label{position:absolute;top:12px;left:12px;background:rgba(12,27,43,.8);font-size:.72rem;padding:4px 10px;border-radius:999px;border:1px solid var(--line)}
+
+/* process: adobe-wall section */
+#proceso{background:var(--adobe);color:var(--ink)}
+#proceso .eyebrow{color:var(--rojo)}
+#proceso h2{color:var(--tierra)}
+#proceso .step{border-top-color:var(--rojo)}
+#proceso .step::before{color:var(--naranja)}
+#proceso .step p{color:#5b4636}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:40px;counter-reset:s}
+.step{border-top:2px solid var(--teal);padding-top:18px}
+.step::before{counter-increment:s;content:"0" counter(s);font-family:Sora;color:var(--gold);font-weight:800;font-size:1.4rem}
+.step h3{margin:6px 0;font-size:1.05rem}
+.step p{color:var(--muted);font-size:.93rem}
+
+/* kit */
+.kit{background:linear-gradient(135deg,var(--navy-2),var(--navy)) padding-box,var(--aguayo) border-box;border:6px solid transparent;border-radius:26px;padding:44px;display:grid;grid-template-columns:1.2fr 1fr;gap:30px;align-items:center}
+.kit ul{list-style:none;display:grid;gap:10px}
+.kit li{padding-left:28px;position:relative}
+.kit li::before{content:"✓";position:absolute;left:0;color:var(--teal);font-weight:700}
+
+/* contact */
+.contact{text-align:center}
+.contact .lead{margin:0 auto 30px}
+.socials{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:18px}
+footer{padding:28px 0;color:var(--muted);font-size:.85rem}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width:860px){
+  .hero .wrap,.kit{grid-template-columns:1fr}
+  .scene{margin:0 auto;max-width:340px}
+  .gallery{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  .links{display:none}
+  .kit{padding:28px}
+}
+@media (max-width:520px){
+  .gallery,.steps{grid-template-columns:1fr}
+  section{padding:64px 0}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#">
+      <svg viewBox="0 0 60 46" aria-hidden="true"><path d="M4 14l5-6h9l4-7h10l8 11h9l5 6" fill="none" stroke="#f5f8fb" stroke-width="2.4"/><circle cx="44" cy="9" r="6" fill="#f4b94f"/><path d="M0 46l14-21 9 13z" fill="#4dbfb9"/><path d="M38 46l9-31 9 31z" fill="#4dbfb9"/><path d="M13 46l15-27 16 27z" fill="#f5f8fb"/></svg>
+      Nube Andina
+    </a>
+    <div class="links">
+      <a href="#servicios">Servicios</a>
+      <a href="#muestras">Muestras</a>
+      <a href="#proceso">Proceso</a>
+      <a href="#kit">Kit de lanzamiento</a>
+    </div>
+    <a class="btn" href="#contacto">Escribinos</a>
+  </div>
+  <div class="aguayo thin"></div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Estudio creativo · Hecho en Bolivia</p>
+      <h1>Ideas que <span>se ven</span>.</h1>
+      <p>Videos promocionales, animación 3D, menús y sitios web para restaurantes, cafeterías y negocios bolivianos que quieren mostrar mejor lo que ofrecen. De la salteña de la esquina al café de altura.</p>
+      <div class="cta-row">
+        <a class="btn" href="#contacto">Contanos tu idea</a>
+        <a class="btn ghost" href="#servicios">Ver servicios</a>
+      </div>
+    </div>
+    <div class="scene" aria-hidden="true">
+      <svg viewBox="0 0 400 400">
+        <defs>
+          <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#f4b94f" stop-opacity=".45"/><stop offset="1" stop-color="#f4b94f" stop-opacity="0"/></radialGradient>
+        </defs>
+        <g class="sun"><circle cx="270" cy="120" r="90" fill="url(#glow)"/><circle cx="270" cy="120" r="38" fill="#f4b94f"/></g>
+        <path class="cloud" d="M40 130l26-34h46l22-38h52l40 56h48l26 34" fill="none" stroke="#f5f8fb" stroke-width="10" stroke-linejoin="round"/>
+        <path class="peak b" d="M10 360l90-140 60 90z" fill="#4dbfb9"/>
+        <path class="peak b" d="M250 360l60-210 70 210z" fill="#4dbfb9"/>
+        <!-- three-summit snowy peak, Illimani style -->
+        <path class="peak" d="M70 360l70-130 22 22 38-82 30 50 22-26 85 166z" fill="#f5f8fb"/>
+        <path class="peak" d="M140 230l22 22 38-82 30 50 22-26 18 34-30-10-24 22-34-40-30 50z" fill="#d9e6f0"/>
+        <!-- aguayo ground band -->
+        <g>
+          <rect x="0" y="360" width="400" height="10" fill="#c8202f"/>
+          <rect x="0" y="370" width="400" height="5" fill="#f4b94f"/>
+          <rect x="0" y="375" width="400" height="8" fill="#2e9e5b"/>
+          <rect x="0" y="383" width="400" height="6" fill="#c2185b"/>
+          <rect x="0" y="389" width="400" height="11" fill="#e8641c"/>
+          <path d="M0 372 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6 l10 -6 l10 6" fill="none" stroke="#f5f8fb" stroke-width="1.6" transform="translate(0,14)"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="aguayo" style="margin-top:70px"></div>
+  <div class="strip"><div>
+    <b>●</b>Videos promocionales<b>●</b>Animación 3D<b>●</b>Motion graphics<b>●</b>Menús digitales<b>●</b>Sitios web<b>●</b>Logos animados<b>●</b>Contenido para TikTok e Instagram
+    <b>●</b>Videos promocionales<b>●</b>Animación 3D<b>●</b>Motion graphics<b>●</b>Menús digitales<b>●</b>Sitios web<b>●</b>Logos animados<b>●</b>Contenido para TikTok e Instagram
+  </div></div>
+</header>
+
+<section id="servicios">
+  <div class="wrap">
+    <p class="eyebrow">Qué hacemos</p>
+    <h2>Videos y piezas digitales para tu negocio</h2>
+    <p class="lead">Trabajamos a partir de tu idea, tu logo y la información de tus productos. No necesitás filmar nada: diseñamos y animamos la pieza completa.</p>
+    <div class="grid">
+      <div class="card"><div class="ico">▶</div><h3>Video promocional</h3><p>15 a 30 segundos para presentar un plato, una oferta o un producto nuevo.</p><span class="tag">Reels · TikTok · Facebook</span></div>
+      <div class="card"><div class="ico">◆</div><h3>Animación 3D de producto</h3><p>Tu producto girando, con detalles y luz cuidada. Ideal para lanzamientos.</p><span class="tag">3D</span></div>
+      <div class="card"><div class="ico">☺</div><h3>Mascota animada</h3><p>Un personaje propio para tu marca que puede aparecer en todos tus videos.</p><span class="tag">3D · personaje</span></div>
+      <div class="card"><div class="ico">Aa</div><h3>Texto animado</h3><p>Frases y precios que se mueven con ritmo para que tu mensaje se lea en segundos.</p><span class="tag">Motion graphics</span></div>
+      <div class="card"><div class="ico">☰</div><h3>Menú animado</h3><p>Tu menú en video para pantallas, redes o tu WhatsApp, más versión QR.</p><span class="tag">Restaurantes</span></div>
+      <div class="card"><div class="ico">✦</div><h3>Logo en movimiento</h3><p>Una intro o cierre animado con tu marca para usar en todos tus videos.</p><span class="tag">Branding</span></div>
+      <div class="card"><div class="ico">⎔</div><h3>Video explicativo</h3><p>Cómo funciona tu servicio en tres pasos claros, con gráficos y diagramas.</p><span class="tag">Servicios</span></div>
+      <div class="card"><div class="ico">▤</div><h3>Sitios web y landing pages</h3><p>Una página simple con tus productos, horarios y botón directo a WhatsApp.</p><span class="tag">Web</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="muestras" class="work">
+  <div class="wrap">
+    <p class="eyebrow">Muestras conceptuales</p>
+    <h2>Así se puede ver tu negocio</h2>
+    <p class="lead">Estas piezas son conceptos de estilo creados por Nube Andina. No son trabajos de clientes ni fotos de productos reales.</p>
+    <div class="gallery">
+      <figure class="shot"><span class="label">Concepto visual</span><img src="assets/post-concept-food.jpg" alt="Concepto visual de un plato boliviano" loading="lazy"><figcaption><b>Plato protagonista</b><small>Restaurantes</small></figcaption></figure>
+      <figure class="shot"><span class="label">Concepto visual</span><img src="assets/post-concept-3d-animation.jpg" alt="Concepto 3D para cafetería" loading="lazy"><figcaption><b>Café en 3D</b><small>Cafeterías</small></figcaption></figure>
+      <figure class="shot"><span class="label">Concepto visual</span><img src="assets/post-concept-menu-web.jpg" alt="Concepto de menú y presencia digital" loading="lazy"><figcaption><b>Menú y web</b><small>Presencia digital</small></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="proceso">
+  <div class="wrap">
+    <p class="eyebrow">Cómo trabajamos</p>
+    <h2>Simple y claro desde el inicio</h2>
+    <div class="steps">
+      <div class="step"><h3>Nos contás tu idea</h3><p>Qué querés mostrar, para qué red y tu fecha.</p></div>
+      <div class="step"><h3>Acordamos el alcance</h3><p>Cotización fija con formatos y revisiones incluidas.</p></div>
+      <div class="step"><h3>Revisás la propuesta</h3><p>Aprobás el guion y el estilo antes de animar.</p></div>
+      <div class="step"><h3>Entregamos</h3><p>Archivos listos para publicar en el formato acordado.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="kit">
+  <div class="wrap">
+    <div class="kit">
+      <div>
+        <p class="eyebrow">Para empezar</p>
+        <h2>Kit de lanzamiento</h2>
+        <p class="lead">Un paquete cerrado para probar cómo se ve tu negocio en video, sin compromisos mensuales.</p>
+      </div>
+      <ul>
+        <li>1 video animado de 15 a 30 segundos</li>
+        <li>1 imagen a juego para tus redes</li>
+        <li>2 rondas de cambios incluidas</li>
+        <li>Opcional: menú digital o landing page</li>
+        <li>Cotización según tu proyecto</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="contacto" class="contact">
+  <div class="wrap">
+    <p class="eyebrow">Contacto</p>
+    <h2>¿Qué te gustaría mostrar?</h2>
+    <p class="lead">Escribinos por mensaje y contanos tu negocio, tu producto y dónde querés publicarlo.</p>
+    <a class="btn" href="https://www.facebook.com/profile.php?id=61595976152654" target="_blank" rel="noopener">Escribinos en Facebook</a>
+    <div class="socials">
+      <!-- TODO: add Instagram, TikTok and WhatsApp links once those accounts exist -->
+      <a class="btn ghost" href="https://www.facebook.com/profile.php?id=61595976152654" target="_blank" rel="noopener">Facebook</a>
+    </div>
+  </div>
+</section>
+
+<div class="aguayo"></div>
+<footer>
+  <div class="wrap">
+    <span>© 2026 Nube Andina · Ideas que se ven</span>
+    <span>Hecho en Bolivia 🇧🇴</span>
+  </div>
+</footer>
+
+</body>
+</html>
