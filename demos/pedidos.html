@@ -39,6 +39,19 @@
 .opts input{position:absolute;opacity:0}
 .opts label:has(input:checked){border-color:var(--brand);background:var(--brand-soft);color:var(--brand)}
 .opts label:has(input:focus-visible){outline:2px solid var(--brand);outline-offset:2px}
+.owner{padding:14px 18px}
+.order{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;margin-bottom:9px}
+.order.new{border-color:var(--brand)}
+.order header{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.order h3{font-size:.96rem}
+.order small{font-size:.8rem;color:var(--muted)}
+.order ul{list-style:none;font-size:.88rem;margin:8px 0}
+.order footer{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.order footer b{font-size:.98rem}
+.st{font-size:.72rem;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--brand-soft);color:var(--brand);white-space:nowrap}
+.adv{font-size:.84rem;font-weight:600;background:var(--brand);color:#fff;padding:9px 13px;border-radius:9px}
+.out{font-size:.8rem;font-weight:600;color:#a33;background:#fbeaea;padding:7px 11px;border-radius:9px;flex:none}
+.empty{text-align:center;color:var(--muted);font-size:.9rem;padding:26px 0}
 .total{display:flex;justify-content:space-between;font-weight:700;font-size:1.05rem;margin:14px 0}
 .sum{display:flex;justify-content:space-between;font-size:.86rem;color:var(--muted);margin-top:8px}
 </style>
@@ -47,9 +60,19 @@
 <div class="demobar"><span><b>DEMO</b> · Negocio de ejemplo</span><a href="../index.html">Hecho por Nube Andina</a></div>
 <main class="app">
   <header class="biz"><h1 id="bizName"></h1><p>Pedí desde tu celular. Te llega todo por WhatsApp.</p></header>
+  <div class="switch"><button id="tabC" aria-pressed="true">Vista del cliente</button><button id="tabN" aria-pressed="false">Vista del negocio</button></div>
+  <div id="cliente">
   <section class="feat" id="feat" aria-label="Destacados"></section>
   <nav class="tabs" id="tabs" aria-label="Categorías"></nav>
   <div id="menu"></div>
+  </div>
+  <div id="negocio" class="owner" hidden>
+    <div class="stats"><div><b id="stN"></b>pedidos hoy</div><div><b id="stV"></b>ventas de hoy</div><div><b id="stT"></b>promedio por pedido</div><div><b id="stP"></b>lo más pedido</div></div>
+    <div class="chips" id="filters"></div>
+    <div id="orders"></div>
+    <div class="tools-row"><button class="btn line" id="csv">Exportar a Excel</button><button class="btn line" id="reset">Reiniciar demo</button></div>
+    <p class="note">En la versión real, cada pedido se guarda en una planilla de Google que solo ve el negocio.</p>
+  </div>
 </main>
 <div class="bar" id="bar" hidden><button class="btn" id="open"><span id="barCount"></span><span>Ver pedido</span><span id="barTotal"></span></button></div>
 
@@ -72,10 +95,12 @@
 <dialog class="sheet" id="done"><div class="sheet-in">
   <div class="sheet-head"><h2>¡Pedido listo!</h2><button class="x" data-close aria-label="Cerrar">×</button></div>
   <div class="chat"><small id="doneFor"></small><div class="bubble" id="bubble"></div></div>
-  <button class="btn" id="again">Hacer otro pedido</button>
+  <button class="btn" id="seeOwner">Ver cómo lo recibe el negocio</button>
+  <button class="btn line" id="again" style="margin-top:8px">Hacer otro pedido</button>
   <p class="note">Esto es una demo. En la versión real, este mensaje se abre en WhatsApp y llega directo al negocio.</p>
 </div></dialog>
 
+<script src="demo.js"></script>
 <script>
 // Per-client settings. whatsapp: international format, digits only ('' = demo, shows the message instead of opening WhatsApp).
 const NEGOCIO = { nombre: 'Café La Cumbre', whatsapp: '', envio: 8 };
@@ -89,7 +114,7 @@ const PRODUCTOS = [
   { id: 'capuchino', cat: 'Cafés', nombre: 'Capuchino', desc: 'Con canela', precio: 16 },
   { id: 'api', cat: 'Bebidas', nombre: 'Api con pastel', desc: 'Morado y blanco', precio: 15, img: '../assets/port/f3d-api.jpg' },
   { id: 'jugo', cat: 'Bebidas', nombre: 'Jugo de naranja', desc: 'Exprimido', precio: 12 },
-  { id: 'limonada', cat: 'Bebidas', nombre: 'Limonada', desc: 'Con hierbabuena', precio: 10 },
+  { id: 'limonada', cat: 'Bebidas', nombre: 'Limonada', desc: 'Con hierbabuena', precio: 10, agotado: true },
 ];
 
 const $ = id => document.getElementById(id), bs = n => 'Bs ' + n, cart = {};
@@ -97,15 +122,52 @@ const slug = s => s.toLowerCase().normalize('NFD').replace(/[^a-z]/g, '');
 const count = () => Object.values(cart).reduce((a, b) => a + b, 0);
 const subtotal = () => PRODUCTOS.reduce((a, p) => a + (cart[p.id] || 0) * p.precio, 0);
 const isDelivery = () => document.querySelector('[name=entrega]:checked').value === 'delivery';
-const control = p => cart[p.id] ? `<div class="step"><button data-minus="${p.id}" aria-label="Quitar ${p.nombre}">−</button><span>${cart[p.id]}</span><button data-plus="${p.id}" aria-label="Agregar ${p.nombre}">+</button></div>` : `<button class="add" data-plus="${p.id}">Agregar</button>`;
+const control = p => p.agotado ? '<span class="out">Agotado</span>' : cart[p.id] ? `<div class="step"><button data-minus="${p.id}" aria-label="Quitar ${p.nombre}">−</button><span>${cart[p.id]}</span><button data-plus="${p.id}" aria-label="Agregar ${p.nombre}">+</button></div>` : `<button class="add" data-plus="${p.id}">Agregar</button>`;
 
+const ESTADOS = ['Nuevo', 'Preparando', 'Listo', 'Entregado'];
+const KEY = 'na-demo-pedidos';
+const seedOrders = () => [
+  { id: 104, hora: '11:42', nombre: 'Lucía F.', entrega: 'Delivery', items: [['Café latte', 2, 16], ['Salteña de pollo', 3, 9]], total: 67, estado: 'Preparando' },
+  { id: 103, hora: '11:15', nombre: 'Carlos V.', entrega: 'Retiro', items: [['Api con pastel', 2, 15]], total: 30, estado: 'Listo' },
+  { id: 102, hora: '10:30', nombre: 'Ana R.', entrega: 'Retiro', items: [['Café y croissant', 1, 24], ['Jugo de naranja', 1, 12]], total: 36, estado: 'Entregado' },
+  { id: 101, hora: '09:05', nombre: 'Pedro C.', entrega: 'Delivery', items: [['Salteña de carne', 6, 9], ['Americano', 2, 12]], total: 86, estado: 'Entregado' },
+];
+let orders = store.get(KEY, seedOrders()), view = 'c', filtro = 'Todos';
+function renderOwner() {
+  const total = orders.reduce((a, o) => a + o.total, 0), tops = {};
+  orders.forEach(o => o.items.forEach(([n, q]) => tops[n] = (tops[n] || 0) + q));
+  $('stN').textContent = orders.length; $('stV').textContent = bs(total);
+  $('stT').textContent = bs(orders.length ? Math.round(total / orders.length) : 0);
+  $('stP').textContent = (Object.entries(tops).sort((a, b) => b[1] - a[1])[0] || ['-'])[0];
+  $('filters').innerHTML = ['Todos', ...ESTADOS].map(e => `<button data-f="${e}" aria-pressed="${e === filtro}">${e}</button>`).join('');
+  const list = orders.filter(o => filtro === 'Todos' || o.estado === filtro);
+  $('orders').replaceChildren(...list.map(o => {
+    const el = document.createElement('article'), next = ESTADOS[ESTADOS.indexOf(o.estado) + 1];
+    el.className = 'order' + (o.estado === 'Nuevo' ? ' new' : '');
+    el.innerHTML = `<header><div><h3></h3><small>#${o.id} · ${o.hora} · ${o.entrega}</small></div><span class="st">${o.estado}</span></header><ul>${o.items.map(([n, q]) => `<li>${q} x ${n}</li>`).join('')}</ul><footer><b>${bs(o.total)}</b>${next ? `<button class="adv" data-adv="${o.id}">Pasar a ${next}</button>` : ''}</footer>`;
+    el.querySelector('h3').textContent = o.nombre;
+    return el;
+  }));
+  if (!list.length) $('orders').innerHTML = '<p class="empty">No hay pedidos en este estado.</p>';
+}
+function show(v) {
+  view = v;
+  $('cliente').hidden = v !== 'c'; $('negocio').hidden = v === 'c';
+  $('tabC').setAttribute('aria-pressed', v === 'c'); $('tabN').setAttribute('aria-pressed', v !== 'c');
+  render(); if (v !== 'c') renderOwner();
+}
+function saveOrder() {
+  const d = isDelivery(), now = new Date();
+  orders.unshift({ id: Math.max(100, ...orders.map(o => o.id)) + 1, hora: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`, nombre: $('nombre').value.trim(), entrega: d ? 'Delivery' : 'Retiro', items: PRODUCTOS.filter(p => cart[p.id]).map(p => [p.nombre, cart[p.id], p.precio]), total: subtotal() + (d ? NEGOCIO.envio : 0), estado: 'Nuevo' });
+  store.set(KEY, orders);
+}
 function render() {
   $('feat').innerHTML = PRODUCTOS.filter(p => p.img).map(p => `<article><img src="${p.img}" alt="${p.nombre}"><div><h3>${p.nombre}</h3><p class="p">${bs(p.precio)}</p>${control(p)}</div></article>`).join('');
   const cats = [...new Set(PRODUCTOS.map(p => p.cat))];
   $('tabs').innerHTML = cats.map(c => `<a href="#${slug(c)}">${c}</a>`).join('');
   $('menu').innerHTML = cats.map(c => `<section class="cat" id="${slug(c)}"><h2>${c}</h2>${PRODUCTOS.filter(p => p.cat === c).map(p => `<div class="item"><div><h3>${p.nombre}</h3><p>${p.desc}</p><b>${bs(p.precio)}</b></div>${control(p)}</div>`).join('')}</section>`).join('');
   const n = count();
-  $('bar').hidden = !n;
+  $('bar').hidden = !n || view !== 'c';
   $('barCount').textContent = n + (n === 1 ? ' producto' : ' productos');
   $('barTotal').textContent = bs(subtotal());
   renderSheet();
@@ -123,9 +185,11 @@ function message() {
   return [`Hola ${NEGOCIO.nombre}, quiero hacer un pedido:`, '', ...lines, '', d ? `Delivery: ${bs(NEGOCIO.envio)}` : 'Retiro en el local', `*Total: ${bs(subtotal() + (d ? NEGOCIO.envio : 0))}*`, '', `Nombre: ${$('nombre').value.trim()}`, ...(d ? [`Dirección: ${$('dir').value.trim()}`] : []), ...(note ? [`Nota: ${note}`] : [])].join('\n');
 }
 document.addEventListener('click', e => {
-  const t = e.target.closest('[data-plus],[data-minus],[data-close]');
+  const t = e.target.closest('[data-plus],[data-minus],[data-close],[data-f],[data-adv]');
   if (!t) return;
   if (t.dataset.close !== undefined) return t.closest('dialog').close();
+  if (t.dataset.f) { filtro = t.dataset.f; return renderOwner(); }
+  if (t.dataset.adv) { const o = orders.find(x => x.id === +t.dataset.adv); o.estado = ESTADOS[ESTADOS.indexOf(o.estado) + 1]; store.set(KEY, orders); return renderOwner(); }
   if (t.dataset.plus) cart[t.dataset.plus] = (cart[t.dataset.plus] || 0) + 1;
   else if (!--cart[t.dataset.minus]) delete cart[t.dataset.minus];
   render();
@@ -137,13 +201,20 @@ $('send').addEventListener('click', () => {
   if (!$('nombre').value.trim()) { $('err').textContent = 'Escribí tu nombre.'; return $('nombre').focus(); }
   if (isDelivery() && !$('dir').value.trim()) { $('err').textContent = 'Escribí la dirección de entrega.'; return $('dir').focus(); }
   const msg = message();
+  saveOrder();
   if (NEGOCIO.whatsapp) { window.open(`https://wa.me/${NEGOCIO.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener'); return; }
   $('sheet').close();
   $('doneFor').textContent = 'Así le llega a ' + NEGOCIO.nombre;
   $('bubble').textContent = msg.replace(/\*/g, ''); // WhatsApp shows *text* as bold
   $('done').showModal();
 });
-$('again').addEventListener('click', () => { Object.keys(cart).forEach(k => delete cart[k]); $('nota').value = ''; $('done').close(); render(); });
+const clearCart = () => { Object.keys(cart).forEach(k => delete cart[k]); $('nota').value = ''; };
+$('again').addEventListener('click', () => { clearCart(); $('done').close(); render(); });
+$('seeOwner').addEventListener('click', () => { clearCart(); $('done').close(); filtro = 'Todos'; show('n'); scrollTo(0, 0); });
+$('tabC').addEventListener('click', () => show('c'));
+$('tabN').addEventListener('click', () => show('n'));
+$('csv').addEventListener('click', () => downloadCSV('pedidos.csv', [['Pedido', 'Hora', 'Cliente', 'Entrega', 'Productos', 'Total', 'Estado'], ...orders.map(o => [o.id, o.hora, o.nombre, o.entrega, o.items.map(([n, q]) => q + ' x ' + n).join(', '), o.total, o.estado])]));
+$('reset').addEventListener('click', () => { store.clear(KEY); orders = seedOrders(); filtro = 'Todos'; renderOwner(); });
 $('bizName').textContent = NEGOCIO.nombre;
 render();
 </script>

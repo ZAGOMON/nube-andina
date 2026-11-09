@@ -43,4 +43,16 @@ dialog.sheet::backdrop{background:rgba(8,14,22,.55)}
 .chat{background:#ece5dd;border-radius:12px;padding:14px;margin:12px 0}
 .chat small{display:block;font-size:.74rem;color:#5f6b63;margin-bottom:8px;text-align:center}
 .bubble{background:var(--wa-bubble);border-radius:10px 10px 2px 10px;padding:10px 12px;font-size:.9rem;white-space:pre-wrap;margin-left:18px;box-shadow:0 1px 1px rgba(0,0,0,.12);overflow-wrap:anywhere}
+.switch{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#e9edf0;border-radius:11px;padding:4px;margin:14px 18px 2px}
+.switch button{padding:9px;border-radius:8px;font-size:.88rem;font-weight:600;color:var(--muted)}
+.switch button[aria-pressed=true]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.stats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:.8rem;color:var(--muted)}
+.stats b{display:block;font-size:1.3rem;color:var(--ink);font-weight:700}
+.tools-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.tools-row .btn{padding:11px;font-size:.86rem}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:12px 0 8px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips button{flex:none;font-size:.83rem;font-weight:500;padding:7px 13px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+.chips button[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:#fff}
 .note{font-size:.78rem;color:var(--muted);text-align:center;margin-top:10px}

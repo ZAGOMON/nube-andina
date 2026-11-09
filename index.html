@@ -6,8 +6,16 @@
 <title>Nube Andina | Videos, 3D y herramientas para negocios en Bolivia</title>
 <meta name="description" content="Estudio digital boliviano. Videos animados, 3D, menús con QR y herramientas como pedidos por WhatsApp, reservas y recordatorios para todo tipo de negocio.">
 <meta property="og:title" content="Nube Andina · Ideas que se ven">
-<meta property="og:description" content="Videos, 3D y menús con QR para restaurantes y negocios en Bolivia.">
-<meta property="og:image" content="https://nubeandina.qhatu.app/assets/port/f3d-saltena.jpg">
+<meta property="og:description" content="Videos, 3D, menús con QR y herramientas digitales para todo tipo de negocio en Bolivia.">
+<link rel="canonical" href="https://nubeandina.qhatu.app/">
+<meta property="og:url" content="https://nubeandina.qhatu.app/">
+<meta property="og:image" content="https://nubeandina.qhatu.app/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_BO">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"Nube Andina","slogan":"Ideas que se ven","url":"https://nubeandina.qhatu.app/","image":"https://nubeandina.qhatu.app/assets/og.jpg","telephone":"+59162899672","areaServed":{"@type":"Country","name":"Bolivia"},"sameAs":["https://www.facebook.com/profile.php?id=61595976152654"]}</script>
+<noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#0b1726">
 <link rel="icon" href="assets/nube-andina-avatar.png">
@@ -23,6 +31,7 @@
   --r:18px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth;scroll-padding-top:84px}
 body{font-family:Inter,system-ui,sans-serif;background:var(--ink);color:var(--snow);line-height:1.6;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
@@ -101,6 +110,22 @@ nav .btn{padding:10px 20px;font-size:.88rem}
 .morepill b{color:var(--cream-ink);margin-right:4px}
 .morepill span{background:#fff;border:1px solid #e7dfcf;padding:6px 13px;border-radius:999px;font-size:.84rem;color:var(--cream-ink)}
 
+/* solutions by business type */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.tabs button{font-size:.9rem;font-weight:500;color:var(--muted);padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:none;cursor:pointer;font-family:inherit;transition:.2s}
+.tabs button:hover{color:var(--snow);border-color:rgba(255,255,255,.4)}
+.tabs button[aria-selected=true]{background:var(--gold);border-color:var(--gold);color:var(--ink);font-weight:600}
+.panel{display:grid;grid-template-columns:1fr 1.25fr;gap:44px;background:var(--ink-2);border:1px solid var(--line);border-radius:22px;padding:38px}
+.panel h3{font-size:1.4rem;margin-bottom:10px}
+.panel>div>p{color:var(--muted)}
+.panel .fromp{margin-top:20px;font-size:.9rem;color:var(--muted)}
+.panel .fromp b{display:block;font-family:Sora;font-size:1.8rem;color:var(--snow);letter-spacing:-.02em;font-weight:700}
+.panel ol{list-style:none;display:grid;gap:10px;align-content:center}
+.panel li{display:flex;justify-content:space-between;gap:18px;align-items:center;background:var(--ink);border:1px solid var(--line);border-radius:14px;padding:15px 18px}
+.panel li b{display:block;font-weight:600}
+.panel li small{color:var(--muted);font-size:.85rem}
+.panel li span{white-space:nowrap;color:var(--gold);font-family:Sora;font-weight:600;font-size:.95rem}
+
 /* portfolio */
 .work{background:var(--ink-2)}
 .vgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
@@ -156,6 +181,21 @@ nav .btn{padding:10px 20px;font-size:.88rem}
 .plan .btn{justify-content:center}
 .fine{color:var(--muted);font-size:.85rem;margin-top:26px}
 
+/* calculator */
+.calc{display:grid;grid-template-columns:1.5fr 1fr;gap:22px;margin-top:22px;background:var(--ink-2);border:1px solid var(--line);border-radius:22px;padding:32px}
+.calc h3{font-size:1.15rem;margin-bottom:14px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opts label{display:flex;align-items:center;gap:10px;padding:11px 13px;border:1px solid var(--line);border-radius:12px;font-size:.9rem;cursor:pointer}
+.opts label:has(input:checked){border-color:var(--gold);background:var(--gold-soft)}
+.opts input{accent-color:var(--gold);width:16px;height:16px;flex:none}
+.opts span{margin-left:auto;color:var(--muted);font-size:.84rem;white-space:nowrap}
+.res{background:var(--ink);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;justify-content:center}
+.res small{color:var(--muted);font-size:.85rem}
+.res strong{font-family:Sora;font-size:2.4rem;letter-spacing:-.03em;line-height:1.15}
+.res p{color:var(--muted);font-size:.88rem;margin:6px 0 18px}
+.res .btn{justify-content:center}
+.res .btn[aria-disabled=true]{opacity:.45;pointer-events:none}
+
 /* faq */
 .faqwrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:70px}
 .faq details{border-bottom:1px solid var(--line);padding:22px 0}
@@ -177,6 +217,27 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:1
 footer .fl{display:flex;gap:24px}
 footer a:hover{color:var(--snow)}
 
+/* contact form */
+.cform{display:grid;grid-template-columns:1.2fr 1fr 1fr auto;gap:10px;max-width:860px;margin:0 auto;text-align:left}
+.cform label{display:grid;gap:6px;font-size:.8rem;font-weight:600;color:var(--muted)}
+.cform input,.cform select{width:100%;padding:13px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:var(--ink);color:var(--snow);font:400 .95rem Inter,sans-serif}
+.cform .btn{align-self:end;justify-content:center;white-space:nowrap}
+.cform-err{color:#ffb3a7;font-size:.85rem;min-height:1.3em;margin-top:8px}
+.alt{font-size:.88rem;color:var(--muted)}
+.alt a{text-decoration:underline}
+
+/* mobile menu and skip link */
+.skip{position:absolute;left:-999px;top:8px;z-index:70;background:var(--gold);color:var(--ink);padding:10px 16px;border-radius:8px;font-weight:600}
+.skip:focus{left:12px}
+a:focus-visible,button:focus-visible,summary:focus-visible,figure:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.nav-r{display:flex;align-items:center;gap:10px}
+.burger{display:none;width:42px;height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:none;cursor:pointer;place-items:center}
+.burger svg{width:20px;height:20px;stroke:var(--snow)}
+.mmenu{background:rgba(11,23,38,.98);border-top:1px solid var(--line);padding:8px 24px 18px}
+.mmenu a{display:block;padding:13px 0;font-size:1.02rem;border-bottom:1px solid var(--line)}
+.mmenu[hidden]{display:none}
+nav.open{background:rgba(11,23,38,.98)}
+
 /* floating contact */
 .fab{position:fixed;right:22px;bottom:22px;z-index:40;width:58px;height:58px;border-radius:50%;background:#25d366;display:grid;place-items:center;box-shadow:0 12px 30px rgba(0,0,0,.4);transition:transform .2s}
 .fab:hover{transform:scale(1.07)}
@@ -193,10 +254,14 @@ footer a:hover{color:var(--snow)}
   .plans,.steps,.tools{grid-template-columns:1fr 1fr}
   .vgrid,.igrid{grid-template-columns:repeat(2,1fr)}
   .links{display:none}
+  .burger{display:grid}
+  .panel,.calc{grid-template-columns:1fr;gap:24px;padding:26px}
+  .cform{grid-template-columns:1fr 1fr}
+  .cform .btn{grid-column:1/-1}
   .about .phone{order:2}
 }
 @media (max-width:620px){
-  section{padding:80px 0}
+  section{padding:60px 0}
   .wrap{padding:0 18px}
   .plans,.steps,.tools{grid-template-columns:1fr}
   .tool{flex-direction:row}
@@ -208,6 +273,16 @@ footer a:hover{color:var(--snow)}
   .svc p{display:none}
   .vgrid,.igrid{gap:12px}
   .side{display:none}
+  .igrid .pitem:nth-child(n+5){display:none}
+  .plan{padding:28px 22px}
+  .plan .price{font-size:2rem;margin:12px 0 2px}
+  .plan ul{gap:8px;margin:16px 0 20px;padding-top:16px}
+  .about .phone{width:min(210px,60vw)}
+  .step{padding:22px}
+  .opts label{padding:9px 12px}
+  .opts,.cform{grid-template-columns:1fr}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;margin:0 -18px 20px;padding:0 18px;scrollbar-width:none}
+  .tabs button{flex:none}
   .facts{gap:22px}
   .about ul{grid-template-columns:1fr}
   .cta .box{padding:50px 22px}
@@ -218,6 +293,7 @@ footer a:hover{color:var(--snow)}
 </head>
 <body>
 
+<a class="skip" href="#servicios">Saltar al contenido</a>
 <nav>
   <div class="wrap">
     <a class="brand" href="#">
@@ -227,13 +303,18 @@ footer a:hover{color:var(--snow)}
     <div class="links">
       <a href="#servicios">Servicios</a>
       <a href="#herramientas">Herramientas</a>
+      <a href="#rubros">Tu rubro</a>
       <a href="#trabajos">Trabajos</a>
       <a href="#nosotros">Nosotros</a>
       <a href="#precios">Precios</a>
       <a href="#preguntas">Preguntas</a>
     </div>
-    <a class="btn js-contact" href="#contacto">Escribinos</a>
+    <div class="nav-r">
+      <a class="btn js-contact" href="#contacto">Escribinos</a>
+      <button class="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="mmenu"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
   </div>
+  <div class="mmenu" id="mmenu" hidden><a href="#servicios">Servicios</a><a href="#herramientas">Herramientas</a><a href="#rubros">Tu rubro</a><a href="#trabajos">Trabajos</a><a href="#nosotros">Nosotros</a><a href="#precios">Precios</a><a href="#preguntas">Preguntas</a></div>
 </nav>
 
 <header class="hero">
@@ -288,6 +369,42 @@ footer a:hover{color:var(--snow)}
   </div>
 </section>
 
+<section id="rubros">
+  <div class="wrap">
+    <div class="head reveal">
+      <div><p class="eyebrow">Tu rubro</p><h2>Una solución para cada negocio</h2></div>
+      <p class="lead">Elegí tu rubro y mirá con qué empezaríamos.</p>
+    </div>
+    <div class="reveal">
+      <div class="tabs" role="tablist" aria-label="Tipo de negocio"><button role="tab" id="t-rest" aria-controls="p-rest" aria-selected="true" tabindex="0">Restaurantes y cafés</button><button role="tab" id="t-tien" aria-controls="p-tien" aria-selected="false" tabindex="-1">Tiendas</button><button role="tab" id="t-dent" aria-controls="p-dent" aria-selected="false" tabindex="-1">Dentistas y clínicas</button><button role="tab" id="t-vete" aria-controls="p-vete" aria-selected="false" tabindex="-1">Veterinarias</button><button role="tab" id="t-sal" aria-controls="p-sal" aria-selected="false" tabindex="-1">Salones y gimnasios</button><button role="tab" id="t-hot" aria-controls="p-hot" aria-selected="false" tabindex="-1">Hoteles y turismo</button></div>
+      <div class="panel" role="tabpanel" id="p-rest" aria-labelledby="t-rest">
+        <div><h3>Más pedidos, sin depender de las apps</h3><p>Tus clientes piden desde el celular, ven tu menú actualizado y te encuentran en redes.</p><p class="fromp">Todo junto desde<b>Bs 1.040</b></p></div>
+        <ol><li><div><b>Pedidos por WhatsApp</b><small>El pedido llega escrito y con total</small></div><span>Bs 400</span></li><li><div><b>Menú digital con QR</b><small>Para tus mesas y para imprimir</small></div><span>Bs 190</span></li><li><div><b>Video promocional</b><small>Tu plato estrella en Reels y TikTok</small></div><span>Bs 450</span></li></ol>
+      </div>
+      <div class="panel" role="tabpanel" id="p-tien" aria-labelledby="t-tien" hidden>
+        <div><h3>Tu tienda abierta las 24 horas</h3><p>Mostrá tus productos con precios claros y dejá de responder lo mismo todo el día.</p><p class="fromp">Todo junto desde<b>Bs 1.000</b></p></div>
+        <ol><li><div><b>Catálogo web</b><small>Actualizás desde una planilla</small></div><span>Bs 400</span></li><li><div><b>WhatsApp Business listo</b><small>Catálogo y respuestas rápidas</small></div><span>Bs 150</span></li><li><div><b>Video promocional</b><small>Para lanzamientos y ofertas</small></div><span>Bs 450</span></li></ol>
+      </div>
+      <div class="panel" role="tabpanel" id="p-dent" aria-labelledby="t-dent" hidden>
+        <div><h3>Menos sillas vacías</h3><p>Tus pacientes reservan solos y les recordás su cita antes de que se olviden.</p><p class="fromp">Todo junto desde<b>Bs 900</b></p></div>
+        <ol><li><div><b>Reservas y citas</b><small>Agenda ordenada desde el celular</small></div><span>Bs 500</span></li><li><div><b>Recordatorios</b><small>Avisos por WhatsApp con un toque</small></div><span>Bs 250</span></li><li><div><b>Google Maps y redes</b><small>Para que te encuentren cerca</small></div><span>Bs 150</span></li></ol>
+      </div>
+      <div class="panel" role="tabpanel" id="p-vete" aria-labelledby="t-vete" hidden>
+        <div><h3>Ninguna vacuna olvidada</h3><p>Cada día sabés a quién avisar. Tus clientes vuelven a tiempo y su mascota está cuidada.</p><p class="fromp">Todo junto desde<b>Bs 900</b></p></div>
+        <ol><li><div><b>Recordatorios</b><small>Vacunas, controles y citas</small></div><span>Bs 250</span></li><li><div><b>Reservas y citas</b><small>Consultas y peluquería</small></div><span>Bs 500</span></li><li><div><b>Google Maps y redes</b><small>Para que te encuentren cerca</small></div><span>Bs 150</span></li></ol>
+      </div>
+      <div class="panel" role="tabpanel" id="p-sal" aria-labelledby="t-sal" hidden>
+        <div><h3>Agenda llena y clientes que vuelven</h3><p>Reservas sin llamadas y una razón para volver cada mes.</p><p class="fromp">Todo junto desde<b>Bs 950</b></p></div>
+        <ol><li><div><b>Reservas y citas</b><small>Turnos desde el celular</small></div><span>Bs 500</span></li><li><div><b>Tarjeta de fidelidad con QR</b><small>Premiá a quienes vuelven</small></div><span>Bs 300</span></li><li><div><b>WhatsApp Business listo</b><small>Respuestas rápidas y horarios</small></div><span>Bs 150</span></li></ol>
+      </div>
+      <div class="panel" role="tabpanel" id="p-hot" aria-labelledby="t-hot" hidden>
+        <div><h3>Más reservas directas</h3><p>Llegá a turistas en español e inglés, sin pagar comisión por cada reserva.</p><p class="fromp">Todo junto desde<b>Bs 1.100</b></p></div>
+        <ol><li><div><b>Reservas y citas</b><small>Reservas directas desde tu página</small></div><span>Bs 500</span></li><li><div><b>Video para turistas</b><small>En español e inglés</small></div><span>Bs 450</span></li><li><div><b>Google Maps y redes</b><small>Fotos, reseñas y horarios</small></div><span>Bs 150</span></li></ol>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="trabajos" class="work">
   <div class="wrap">
     <div class="head reveal">
@@ -313,7 +430,7 @@ footer a:hover{color:var(--snow)}
     <p class="note">Piezas de muestra hechas por Nube Andina. Los negocios y precios que aparecen son de ejemplo.</p>
   </div>
 </section>
-<div class="lightbox" hidden><button class="close" aria-label="Cerrar">×</button><div class="lb-body"></div></div>
+<div class="lightbox" role="dialog" aria-modal="true" aria-label="Vista en grande" hidden><button class="close" aria-label="Cerrar">×</button><div class="lb-body"></div></div>
 
 <section id="nosotros" class="about">
   <div class="wrap">
@@ -380,7 +497,11 @@ footer a:hover{color:var(--snow)}
         <a class="btn ghost js-contact" href="#contacto">Consultar</a>
       </div>
     </div>
-    <p class="fine">¿Todo junto? Arranque Digital (Google Maps, redes, menú QR y 1 video) desde Bs 750. 50% de anticipo y 50% al entregar. Impresiones, dominios y publicidad pagada se cotizan aparte.</p>
+    <div class="calc reveal">
+      <div><h3>Armá tu plan</h3><div class="opts"><label><input type="checkbox" data-n="Video animado" data-p="450">Video animado<span>Bs 450</span></label><label><input type="checkbox" data-n="3D realista" data-p="450">3D realista<span>Bs 450</span></label><label><input type="checkbox" data-n="Menú digital con QR" data-p="190">Menú digital con QR<span>Bs 190</span></label><label><input type="checkbox" data-n="WhatsApp Business listo" data-p="150">WhatsApp Business listo<span>Bs 150</span></label><label><input type="checkbox" data-n="Google Maps y redes" data-p="150">Google Maps y redes<span>Bs 150</span></label><label><input type="checkbox" data-n="Pedidos por WhatsApp" data-p="400">Pedidos por WhatsApp<span>Bs 400</span></label><label><input type="checkbox" data-n="Reservas y citas" data-p="500">Reservas y citas<span>Bs 500</span></label><label><input type="checkbox" data-n="Recordatorios" data-p="250">Recordatorios<span>Bs 250</span></label><label><input type="checkbox" data-n="Catálogo web" data-p="400">Catálogo web<span>Bs 400</span></label><label><input type="checkbox" data-n="Tarjeta de fidelidad con QR" data-p="300">Tarjeta de fidelidad con QR<span>Bs 300</span></label><label><input type="checkbox" data-n="Inventario con alertas" data-p="300">Inventario con alertas<span>Bs 300</span></label></div></div>
+      <div class="res" aria-live="polite"><small>Tu estimado desde</small><strong id="calcT">Bs 0</strong><p id="calcS">Elegí lo que necesitás.</p><a class="btn" id="calcB" href="#" aria-disabled="true">Consultar este plan</a></div>
+    </div>
+    <p class="fine">¿Todo junto? Arranque Digital (Google Maps, redes, menú QR y 1 video) desde Bs 750. 50% de anticipo y 50% al entregar. Los precios son desde: te confirmamos un precio fijo antes de empezar. Impresiones, dominios y publicidad pagada se cotizan aparte.</p>
   </div>
 </section>
 
@@ -391,6 +512,7 @@ footer a:hover{color:var(--snow)}
       <details open><summary>¿Tengo que filmar algo?</summary><p>No. Animamos todo a partir de tu logo, tus precios y la información de tus productos. Si tenés fotos de tus platos, las usamos para que todo se vea igual que en tu local.</p></details>
       <details><summary>¿Cuánto tarda?</summary><p>Un video del Kit de lanzamiento está listo en 3 a 5 días hábiles desde que recibimos tu información y el anticipo.</p></details>
       <details><summary>¿Cómo se paga?</summary><p>50% de anticipo para empezar y 50% cuando aprobás la versión final. Te pasamos los datos de pago por WhatsApp.</p></details>
+      <details><summary>¿Las herramientas tienen costo mensual?</summary><p>La herramienta se paga una sola vez. Si querés que nos encarguemos de los cambios y el soporte, hay un plan opcional desde Bs 50 al mes.</p></details>
       <details><summary>¿Trabajan fuera de La Paz?</summary><p>Sí. Trabajamos con negocios de toda Bolivia por WhatsApp y entregamos los archivos en línea.</p></details>
       <details><summary>¿Los trabajos de muestra son de clientes reales?</summary><p>Son piezas originales de Nube Andina con negocios de ejemplo, para mostrar el estilo. Nunca publicamos trabajos de clientes sin su permiso.</p></details>
     </div>
@@ -402,11 +524,15 @@ footer a:hover{color:var(--snow)}
     <div class="box reveal">
       <p class="eyebrow">Contacto</p>
       <h2>Mirá cómo se vería tu negocio, gratis</h2>
-      <p class="lead">Escribinos el nombre de tu negocio y te mandamos un ejemplo con tu marca. Sin compromiso.</p>
-      <div class="cta-row">
-        <a class="btn js-contact js-direct" href="https://www.facebook.com/profile.php?id=61595976152654" target="_blank" rel="noopener">Pedir mi ejemplo</a>
-        <a class="btn ghost" href="https://www.facebook.com/profile.php?id=61595976152654" target="_blank" rel="noopener">Facebook</a>
-      </div>
+      <p class="lead">Contanos qué necesitás y te mandamos un ejemplo con tu marca. Sin compromiso.</p>
+      <form class="cform" id="cform" novalidate>
+        <label>Nombre de tu negocio<input id="cNeg" autocomplete="organization"></label>
+        <label>Rubro<select id="cRub"><option>Restaurante o café</option><option>Tienda</option><option>Dentista o clínica</option><option>Veterinaria</option><option>Salón o gimnasio</option><option>Hotel o turismo</option><option>Otro</option></select></label>
+        <label>Necesito<select id="cNec"><option>Un video</option><option>Pedidos por WhatsApp</option><option>Reservas y citas</option><option>Recordatorios</option><option>Menú digital con QR</option><option>No sé, quiero que me asesoren</option></select></label>
+        <button class="btn" type="submit">Enviar por WhatsApp</button>
+      </form>
+      <p class="cform-err" id="cErr" role="alert"></p>
+      <p class="alt">¿Preferís otra red? <a href="https://www.facebook.com/profile.php?id=61595976152654" target="_blank" rel="noopener">Escribinos en Facebook</a></p>
     </div>
   </div>
 </section>
@@ -436,6 +562,39 @@ if (WHATSAPP) {
   fab.classList.add('fb'); fab.innerHTML = ICON_FB;
 }
 
+// send any prepared message to the best contact channel
+const contactar = msg => window.open(WHATSAPP ? 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(msg) : 'https://www.facebook.com/profile.php?id=61595976152654', '_blank', 'noopener');
+
+// mobile menu
+const burger = document.querySelector('.burger'), mmenu = document.getElementById('mmenu');
+const setMenu = open => { mmenu.hidden = !open; burger.setAttribute('aria-expanded', open); burger.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú'); document.querySelector('nav').classList.toggle('open', open); };
+burger.addEventListener('click', () => setMenu(mmenu.hidden));
+mmenu.addEventListener('click', e => { if (e.target.tagName === 'A') setMenu(false); });
+
+// business type tabs
+const tabs = [...document.querySelectorAll('[role=tab]')];
+const pick = b => tabs.forEach(x => { const on = x === b; x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1; document.getElementById(x.getAttribute('aria-controls')).hidden = !on; });
+tabs.forEach((b, i) => { b.addEventListener('click', () => pick(b)); b.addEventListener('keydown', e => { const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!d) return; const n = tabs[(i + d + tabs.length) % tabs.length]; pick(n); n.focus(); }); });
+
+// plan calculator
+const checks = [...document.querySelectorAll('.opts input')], calcB = document.getElementById('calcB');
+const chosen = () => checks.filter(c => c.checked);
+const calc = () => { const s = chosen(), total = s.reduce((a, c) => a + +c.dataset.p, 0); document.getElementById('calcT').textContent = 'Bs ' + total.toLocaleString('es-BO'); document.getElementById('calcS').textContent = s.length ? 'Empezás con un anticipo de Bs ' + Math.ceil(total / 2).toLocaleString('es-BO') + ' (50%).' : 'Elegí lo que necesitás.'; calcB.setAttribute('aria-disabled', !s.length); };
+checks.forEach(c => c.addEventListener('change', calc));
+calcB.addEventListener('click', e => { e.preventDefault(); if (chosen().length) contactar('Hola Nube Andina, quiero consultar este plan:\n' + chosen().map(c => '• ' + c.dataset.n).join('\n') + '\nEstimado desde: ' + document.getElementById('calcT').textContent); });
+
+// contact form
+document.getElementById('cform').addEventListener('submit', e => {
+  e.preventDefault();
+  const neg = document.getElementById('cNeg'), err = document.getElementById('cErr');
+  if (!neg.value.trim()) { err.textContent = 'Escribí el nombre de tu negocio.'; return neg.focus(); }
+  err.textContent = '';
+  contactar('Hola Nube Andina, quiero ver un ejemplo.\nNegocio: ' + neg.value.trim() + '\nRubro: ' + document.getElementById('cRub').value + '\nNecesito: ' + document.getElementById('cNec').value);
+});
+
+// respect reduced motion for the hero video
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.querySelector('.stage video').pause();
+
 // nav turns solid after scrolling; sections fade in once
 const nav = document.querySelector('nav');
 const onScroll = () => nav.classList.toggle('solid', scrollY > 30);
@@ -447,14 +606,21 @@ document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
 const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), { threshold: .4 });
 document.querySelectorAll('.pitem video').forEach(v => io.observe(v));
 const lb = document.querySelector('.lightbox'), lbBody = lb.querySelector('.lb-body');
-document.querySelectorAll('.pitem').forEach(it => it.addEventListener('click', () => {
+let lbFrom = null;
+const openLb = it => {
   const src = it.dataset.src;
+  lbFrom = it;
   lbBody.innerHTML = src.endsWith('.mp4') ? '<video src="' + src + '" controls autoplay playsinline></video>' : '<img src="' + src + '" alt="">';
-  lb.hidden = false; document.body.style.overflow = 'hidden';
-}));
-const closeLb = () => { lb.hidden = true; lbBody.innerHTML = ''; document.body.style.overflow = ''; };
+  lb.hidden = false; document.body.style.overflow = 'hidden'; lb.querySelector('.close').focus();
+};
+document.querySelectorAll('.pitem').forEach(it => {
+  it.tabIndex = 0; it.setAttribute('role', 'button'); it.setAttribute('aria-label', 'Ver en grande: ' + it.querySelector('b').textContent);
+  it.addEventListener('click', () => openLb(it));
+  it.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLb(it); } });
+});
+const closeLb = () => { if (lb.hidden) return; lb.hidden = true; lbBody.innerHTML = ''; document.body.style.overflow = ''; if (lbFrom) lbFrom.focus(); };
 lb.addEventListener('click', e => { if (e.target === lb || e.target.classList.contains('close')) closeLb(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeLb(); setMenu(false); } });
 </script>
 </body>
 </html>
