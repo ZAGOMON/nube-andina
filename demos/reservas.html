@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reservas y citas | Demo Nube Andina</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="../assets/nube-andina-avatar.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="demo.css">
+<style>
+:root{--brand:#0e7490;--brand-soft:#e4f3f7}
+.switch{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#e9edf0;border-radius:11px;padding:4px;margin:14px 18px 2px}
+.switch button{padding:9px;border-radius:8px;font-size:.88rem;font-weight:600;color:var(--muted)}
+.switch button[aria-pressed=true]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.block{padding:14px 18px 2px}
+.block h2{font-size:1rem;margin-bottom:10px;display:flex;gap:9px;align-items:center}
+.block h2 i{font-style:normal;width:23px;height:23px;border-radius:50%;background:var(--brand);color:#fff;font-size:.76rem;display:grid;place-items:center;flex:none}
+.svc{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;margin-bottom:8px;text-align:left}
+.svc b{font-weight:600;font-size:.95rem}.svc span{font-size:.84rem;color:var(--muted);white-space:nowrap}
+.svc[aria-pressed=true]{border-color:var(--brand);background:var(--brand-soft)}
+.days{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.days::-webkit-scrollbar{display:none}
+.days button{flex:0 0 58px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:9px 0;font-size:.74rem;color:var(--muted);text-transform:capitalize}
+.days b{display:block;font-size:1.12rem;color:var(--ink);font-weight:600}
+.days button[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:#fff}
+.days button[aria-pressed=true] b{color:#fff}
+.days button:disabled{opacity:.4;cursor:not-allowed}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}
+.slots button{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:10px 0;font-size:.86rem;font-weight:500}
+.slots button:disabled{background:#eff1f3;color:#a7b0b9;text-decoration:line-through;cursor:not-allowed;border-color:#eff1f3}
+.slots button[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:#fff}
+.empty{font-size:.88rem;color:var(--muted);padding:12px 0}
+.confirm{padding:16px 18px}
+.summary{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;font-size:.92rem;margin-bottom:12px}
+.summary div{display:flex;justify-content:space-between;gap:14px;padding:3px 0}
+.summary span{color:var(--muted)}
+.summary b{font-weight:600;text-align:right}
+.agenda{padding:14px 18px}
+.agenda h2{font-size:1.02rem;text-transform:capitalize;margin:12px 0 8px}
+.appt{display:grid;grid-template-columns:54px 1fr auto;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:7px}
+.appt time{font-weight:600;font-size:.9rem}
+.appt b{display:block;font-size:.92rem;font-weight:600}
+.appt small{font-size:.8rem;color:var(--muted)}
+.appt em{font-style:normal;font-size:.72rem;font-weight:600;background:var(--brand-soft);color:var(--brand);padding:3px 8px;border-radius:99px}
+.appt.new{border-color:var(--brand)}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.stats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:.8rem;color:var(--muted)}
+.stats b{display:block;font-size:1.3rem;color:var(--ink);font-weight:700}
+</style>
+</head>
+<body>
+<div class="demobar"><span><b>DEMO</b> · Negocio de ejemplo</span><a href="../index.html">Hecho por Nube Andina</a></div>
+<main class="app">
+  <header class="biz"><h1 id="bizName"></h1><p>Reservá tu cita en menos de un minuto.</p></header>
+  <div class="switch"><button id="tabC" aria-pressed="true">Vista del cliente</button><button id="tabN" aria-pressed="false">Vista del negocio</button></div>
+
+  <div id="cliente">
+    <section class="block"><h2><i>1</i>Elegí el servicio</h2><div id="svcs"></div></section>
+    <section class="block"><h2><i>2</i>Elegí día y hora</h2><div class="days" id="days"></div><div class="slots" id="slots"></div></section>
+    <section class="confirm">
+      <div class="summary" id="sum" hidden></div>
+      <label class="field"><span>Tu nombre</span><input id="nombre" autocomplete="name"></label>
+      <label class="field"><span>Tu celular</span><input id="cel" inputmode="numeric" maxlength="8" placeholder="8 dígitos" autocomplete="tel"></label>
+      <p class="err" id="err" role="alert"></p>
+      <button class="btn" id="book" disabled>Confirmar cita</button>
+    </section>
+  </div>
+
+  <div id="negocio" class="agenda" hidden>
+    <div class="stats"><div><b id="stHoy"></b>citas este día</div><div><b id="stLibre"></b>horarios libres</div></div>
+    <div class="days" id="daysN" style="margin-top:12px"></div>
+    <h2 id="agTitle"></h2>
+    <div id="agList"></div>
+    <p class="note">En la versión real, cada cita se guarda en una planilla de Google que solo ve el negocio.</p>
+  </div>
+</main>
+
+<dialog class="sheet" id="done"><div class="sheet-in">
+  <div class="sheet-head"><h2>¡Cita reservada!</h2><button class="x" data-close aria-label="Cerrar">×</button></div>
+  <div class="chat"><small id="doneFor"></small><div class="bubble" id="bubble"></div></div>
+  <button class="btn" id="seeAgenda">Ver cómo lo ve el negocio</button>
+  <p class="note">Esto es una demo: no se guarda ni se envía nada.</p>
+</div></dialog>
+
+<script>
+// Per-client settings. whatsapp: digits only ('' = demo). horas: opening hours by weekday (0 = Sunday), [from, to).
+const NEGOCIO = { nombre: 'Clínica Dental Alborada', whatsapp: '', dias: 14, cada: 30, horas: { 1: [9, 18], 2: [9, 18], 3: [9, 18], 4: [9, 18], 5: [9, 18], 6: [9, 13] } };
+const SERVICIOS = [['Consulta general', 'Bs 50'], ['Limpieza dental', 'Bs 150'], ['Evaluación de ortodoncia', 'Bs 80'], ['Blanqueamiento', 'Bs 400']];
+const NOMBRES = ['María Quispe', 'Juan Mamani', 'Ana Rojas', 'Carlos Vargas', 'Lucía Flores', 'Pedro Choque', 'Sofía Gutiérrez', 'Diego Condori'];
+
+const $ = id => document.getElementById(id);
+const key = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const fmt = (d, o) => d.toLocaleDateString('es-BO', o);
+const hash = s => [...s].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+const today = new Date(); today.setHours(0, 0, 0, 0);
+const days = Array.from({ length: NEGOCIO.dias }, (_, i) => new Date(today.getFullYear(), today.getMonth(), today.getDate() + i));
+const booked = {}; // bookings made in this visit: { 'date time': {...} }
+const state = { svc: null, day: days.find(d => NEGOCIO.horas[d.getDay()]), slot: null, adminDay: null };
+state.adminDay = state.day;
+
+const slotsOf = d => { const h = NEGOCIO.horas[d.getDay()]; if (!h) return []; const out = []; for (let m = h[0] * 60; m < h[1] * 60; m += NEGOCIO.cada) out.push(`${String(m / 60 | 0).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`); return out; };
+const sampleTaken = (d, t) => hash(key(d) + t) % 3 === 0; // sample appointments so the agenda isn't empty
+const isTaken = (d, t) => sampleTaken(d, t) || !!booked[key(d) + ' ' + t];
+const isPast = (d, t) => { const [h, m] = t.split(':').map(Number); return new Date(d.getFullYear(), d.getMonth(), d.getDate(), h, m) <= new Date(); };
+const dayBtn = (d, sel, attr) => `<button data-${attr}="${key(d)}" aria-pressed="${key(d) === key(sel)}" ${NEGOCIO.horas[d.getDay()] ? '' : 'disabled'}>${fmt(d, { weekday: 'short' }).replace('.', '')}<b>${d.getDate()}</b>${fmt(d, { month: 'short' }).replace('.', '')}</button>`;
+const byKey = k => days.find(d => key(d) === k);
+
+function renderClient() {
+  $('svcs').innerHTML = SERVICIOS.map(([n, p], i) => `<button class="svc" data-svc="${i}" aria-pressed="${state.svc === i}"><b>${n}</b><span>${p}</span></button>`).join('');
+  $('days').innerHTML = days.map(d => dayBtn(d, state.day, 'day')).join('');
+  const free = slotsOf(state.day);
+  $('slots').innerHTML = free.map(t => `<button data-slot="${t}" aria-pressed="${state.slot === t}" ${isTaken(state.day, t) || isPast(state.day, t) ? 'disabled' : ''}>${t}</button>`).join('') || '<p class="empty">Cerrado este día.</p>';
+  const ready = state.svc !== null && state.slot;
+  $('book').disabled = !ready;
+  $('sum').hidden = !ready;
+  if (ready) $('sum').innerHTML = `<div><span>Servicio</span><b>${SERVICIOS[state.svc][0]}</b></div><div><span>Día</span><b style="text-transform:capitalize">${fmt(state.day, { weekday: 'long', day: 'numeric', month: 'long' })}</b></div><div><span>Hora</span><b>${state.slot}</b></div>`;
+}
+function renderAdmin() {
+  const d = state.adminDay, list = slotsOf(d).filter(t => isTaken(d, t));
+  $('daysN').innerHTML = days.map(x => dayBtn(x, d, 'aday')).join('');
+  $('stHoy').textContent = list.length;
+  $('stLibre').textContent = slotsOf(d).length - list.length;
+  $('agTitle').textContent = fmt(d, { weekday: 'long', day: 'numeric', month: 'long' });
+  $('agList').innerHTML = list.map(t => {
+    const b = booked[key(d) + ' ' + t], h = hash(key(d) + t);
+    const row = document.createElement('div');
+    row.className = 'appt' + (b ? ' new' : '');
+    row.innerHTML = `<time>${t}</time><div><b></b><small></small></div>${b ? '<em>Nueva</em>' : '<span></span>'}`;
+    row.querySelector('b').textContent = b ? b.nombre : NOMBRES[h % NOMBRES.length];
+    row.querySelector('small').textContent = b ? b.svc : SERVICIOS[h % SERVICIOS.length][0];
+    return row.outerHTML;
+  }).join('') || '<p class="empty">Sin citas este día.</p>';
+}
+function show(view) {
+  const client = view === 'c';
+  $('cliente').hidden = !client; $('negocio').hidden = client;
+  $('tabC').setAttribute('aria-pressed', client); $('tabN').setAttribute('aria-pressed', !client);
+  client ? renderClient() : renderAdmin();
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-svc],[data-day],[data-aday],[data-slot],[data-close]');
+  if (!t) return;
+  if (t.dataset.close !== undefined) return t.closest('dialog').close();
+  if (t.dataset.svc) state.svc = +t.dataset.svc;
+  if (t.dataset.day) { state.day = byKey(t.dataset.day); state.slot = null; }
+  if (t.dataset.slot) state.slot = t.dataset.slot;
+  if (t.dataset.aday) { state.adminDay = byKey(t.dataset.aday); return renderAdmin(); }
+  renderClient();
+});
+$('tabC').addEventListener('click', () => show('c'));
+$('tabN').addEventListener('click', () => show('n'));
+$('book').addEventListener('click', () => {
+  const nombre = $('nombre').value.trim(), cel = $('cel').value.trim();
+  if (!nombre) { $('err').textContent = 'Escribí tu nombre.'; return $('nombre').focus(); }
+  if (!/^[67]\d{7}$/.test(cel)) { $('err').textContent = 'Escribí un celular boliviano de 8 dígitos.'; return $('cel').focus(); }
+  $('err').textContent = '';
+  const svc = SERVICIOS[state.svc][0], dia = fmt(state.day, { weekday: 'long', day: 'numeric', month: 'long' });
+  const msg = `Hola ${NEGOCIO.nombre}, quiero confirmar mi cita:\n\n• ${svc}\n• ${dia}\n• ${state.slot}\n\nNombre: ${nombre}\nCelular: ${cel}`;
+  if (NEGOCIO.whatsapp) window.open(`https://wa.me/${NEGOCIO.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+  booked[key(state.day) + ' ' + state.slot] = { nombre, svc };
+  state.adminDay = state.day; state.slot = null;
+  $('nombre').value = ''; $('cel').value = '';
+  renderClient();
+  $('doneFor').textContent = 'Así le llega a ' + NEGOCIO.nombre;
+  $('bubble').textContent = msg;
+  $('done').showModal();
+});
+$('seeAgenda').addEventListener('click', () => { $('done').close(); show('n'); scrollTo(0, 0); });
+$('bizName').textContent = NEGOCIO.nombre;
+show('c');
+</script>
+</body>
+</html>

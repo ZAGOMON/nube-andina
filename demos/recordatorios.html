@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recordatorios | Demo Nube Andina</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="../assets/nube-andina-avatar.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="demo.css">
+<style>
+:root{--brand:#2f6f4f;--brand-soft:#e6f2ea}
+.prog{background:rgba(255,255,255,.22);height:7px;border-radius:9px;margin-top:12px;overflow:hidden}
+.prog i{display:block;height:100%;background:#fff;border-radius:9px;transition:width .3s}
+.biz small{display:block;font-size:.84rem;margin-top:8px;opacity:.92}
+.tabs{display:flex;gap:6px;padding:14px 18px 6px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none;font-size:.85rem;font-weight:500;padding:8px 13px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+.tabs button[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:#fff}
+.list{padding:6px 18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;margin-bottom:9px}
+.card.sent{opacity:.62}
+.top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.card h3{font-size:.98rem}
+.card p{font-size:.84rem;color:var(--muted)}
+.tag{flex:none;font-size:.72rem;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--brand-soft);color:var(--brand)}
+.tag.vacuna{background:#fdf0dc;color:#94600e}.tag.cita{background:#e4eefb;color:#23589c}
+.when{font-size:.82rem;font-weight:500;margin-top:7px;text-transform:capitalize}
+.card .btn{margin-top:11px;padding:11px}
+.ok{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:.84rem;font-weight:600;color:var(--brand)}
+.empty{text-align:center;font-size:.9rem;color:var(--muted);padding:34px 10px}
+.fab{position:fixed;right:max(18px,calc(50% - 242px));bottom:20px;z-index:10;background:var(--brand);color:#fff;font-weight:600;padding:14px 20px;border-radius:999px;box-shadow:0 10px 26px rgba(20,60,40,.35)}
+.msg{width:100%;background:var(--wa-bubble);border:0;border-radius:10px;padding:11px 12px;font-size:.9rem;min-height:128px;resize:vertical}
+.chat .msgwrap{margin-left:18px}
+</style>
+</head>
+<body>
+<div class="demobar"><span><b>DEMO</b> · Negocio de ejemplo</span><a href="../index.html">Hecho por Nube Andina</a></div>
+<main class="app">
+  <header class="biz"><h1 id="bizName"></h1><small id="stat"></small><div class="prog"><i id="bar"></i></div></header>
+  <div class="tabs" id="tabs"></div>
+  <div class="list" id="list"></div>
+</main>
+<button class="fab" id="add">+ Nuevo</button>
+
+<dialog class="sheet" id="send"><div class="sheet-in">
+  <div class="sheet-head"><h2 id="sTitle"></h2><button class="x" data-close aria-label="Cerrar">×</button></div>
+  <div class="chat"><small>Podés cambiar el mensaje antes de enviarlo</small><div class="msgwrap"><textarea class="msg" id="msg" aria-label="Mensaje"></textarea></div></div>
+  <button class="btn wa" id="go">Enviar por WhatsApp</button>
+  <p class="note" id="sNote"></p>
+</div></dialog>
+
+<dialog class="sheet" id="form"><div class="sheet-in">
+  <div class="sheet-head"><h2>Nuevo recordatorio</h2><button class="x" data-close aria-label="Cerrar">×</button></div>
+  <label class="field"><span>Dueño</span><input id="fDue"></label>
+  <label class="field"><span>Mascota</span><input id="fMas"></label>
+  <label class="field"><span>Motivo</span><select id="fTipo"></select></label>
+  <label class="field"><span>Fecha</span><input type="date" id="fFecha"></label>
+  <label class="field"><span>Hora (opcional)</span><input type="time" id="fHora"></label>
+  <p class="err" id="fErr" role="alert"></p>
+  <button class="btn" id="save">Guardar</button>
+</div></dialog>
+
+<script>
+// Per-client settings. demo: true never opens WhatsApp, because the sample clients are not real people.
+const NEGOCIO = { nombre: 'Veterinaria Amigo Fiel', demo: true };
+const TIPOS = {
+  vacuna: { label: 'Vacuna', texto: r => `Hola ${r.dueno}, te escribimos de ${NEGOCIO.nombre}. A ${r.mascota} le toca su vacuna ${cuando(r)}. ¿Te reservamos un horario? 🐾` },
+  cita: { label: 'Cita', texto: r => `Hola ${r.dueno}, te recordamos la cita de ${r.mascota} en ${NEGOCIO.nombre} ${cuando(r)}${r.hora ? ' a las ' + r.hora : ''}. Si no podés venir, avisanos por favor. ¡Gracias!` },
+  control: { label: 'Control', texto: r => `Hola ${r.dueno}, ¿cómo sigue ${r.mascota}? Le toca su control ${cuando(r)} en ${NEGOCIO.nombre}. ¿Te queda bien que lo agendemos?` },
+};
+const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+const enDias = n => new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + n);
+const items = [
+  ['María', 'Rocky', 'vacuna', 0, ''], ['Jorge', 'Luna', 'cita', 0, '15:30'], ['Patricia', 'Simón', 'control', 0, '10:00'], ['Rodrigo', 'Canela', 'vacuna', 0, ''],
+  ['Elena', 'Toby', 'cita', 1, '09:00'], ['Andrés', 'Mishi', 'vacuna', 1, ''], ['Carla', 'Max', 'control', 2, '11:30'], ['Hugo', 'Nina', 'vacuna', 3, ''], ['Silvia', 'Bruno', 'cita', 5, '16:00'],
+].map(([dueno, mascota, tipo, d, hora], id) => ({ id, dueno, mascota, tipo, fecha: enDias(d), hora, sent: false }));
+let tab = 'hoy', current = null;
+
+const $ = id => document.getElementById(id);
+const diff = d => Math.round((d - hoy) / 864e5);
+const cuando = r => { const n = diff(r.fecha); return n === 0 ? 'hoy' : n === 1 ? 'mañana' : 'el ' + r.fecha.toLocaleDateString('es-BO', { weekday: 'long', day: 'numeric', month: 'long' }); };
+const FILTROS = { hoy: ['Hoy', r => diff(r.fecha) === 0 && !r.sent], manana: ['Mañana', r => diff(r.fecha) === 1 && !r.sent], semana: ['Esta semana', r => diff(r.fecha) > 1 && diff(r.fecha) <= 7 && !r.sent], enviados: ['Enviados', r => r.sent] };
+
+function render() {
+  const todays = items.filter(r => diff(r.fecha) === 0), done = todays.filter(r => r.sent).length;
+  $('stat').textContent = `${done} de ${todays.length} recordatorios de hoy enviados`;
+  $('bar').style.width = (todays.length ? done / todays.length * 100 : 0) + '%';
+  $('tabs').innerHTML = Object.entries(FILTROS).map(([k, [l, f]]) => `<button data-tab="${k}" aria-pressed="${k === tab}">${l} (${items.filter(f).length})</button>`).join('');
+  const rows = items.filter(FILTROS[tab][1]).sort((a, b) => a.fecha - b.fecha || a.hora.localeCompare(b.hora));
+  $('list').replaceChildren(...rows.map(card));
+  if (!rows.length) $('list').innerHTML = `<p class="empty">${tab === 'enviados' ? 'Todavía no enviaste ninguno.' : '¡Todo al día! No hay recordatorios pendientes acá.'}</p>`;
+}
+function card(r) {
+  const el = document.createElement('article');
+  el.className = 'card' + (r.sent ? ' sent' : '');
+  el.innerHTML = `<div class="top"><div><h3></h3><p></p></div><span class="tag ${r.tipo}">${TIPOS[r.tipo].label}</span></div><p class="when"></p>` + (r.sent ? '<div class="ok">✓ Enviado</div>' : `<button class="btn wa" data-send="${r.id}">Preparar mensaje</button>`);
+  el.querySelector('h3').textContent = r.mascota;
+  el.querySelector('.top p').textContent = 'Dueño: ' + r.dueno;
+  el.querySelector('.when').textContent = cuando(r) + (r.hora ? ' · ' + r.hora : '');
+  return el;
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-tab],[data-send],[data-close]');
+  if (!t) return;
+  if (t.dataset.close !== undefined) return t.closest('dialog').close();
+  if (t.dataset.tab) { tab = t.dataset.tab; return render(); }
+  current = items.find(r => r.id === +t.dataset.send);
+  $('sTitle').textContent = `Para ${current.dueno} (${current.mascota})`;
+  $('msg').value = TIPOS[current.tipo].texto(current);
+  $('sNote').textContent = NEGOCIO.demo ? 'Esto es una demo. En la versión real, este botón abre WhatsApp con el mensaje ya escrito.' : '';
+  $('send').showModal();
+});
+$('go').addEventListener('click', () => {
+  if (!NEGOCIO.demo && current.tel) window.open(`https://wa.me/591${current.tel}?text=${encodeURIComponent($('msg').value)}`, '_blank', 'noopener');
+  current.sent = true;
+  $('send').close();
+  render();
+});
+$('add').addEventListener('click', () => { $('fErr').textContent = ''; $('fFecha').value = ''; $('form').showModal(); });
+$('save').addEventListener('click', () => {
+  const dueno = $('fDue').value.trim(), mascota = $('fMas').value.trim(), f = $('fFecha').value;
+  if (!dueno || !mascota || !f) { $('fErr').textContent = 'Completá dueño, mascota y fecha.'; return; }
+  const [y, m, d] = f.split('-').map(Number), fecha = new Date(y, m - 1, d);
+  if (diff(fecha) < 0) { $('fErr').textContent = 'La fecha no puede ser pasada.'; return; }
+  items.push({ id: items.length, dueno, mascota, tipo: $('fTipo').value, fecha, hora: $('fHora').value, sent: false });
+  $('fDue').value = ''; $('fMas').value = ''; $('fHora').value = '';
+  tab = diff(fecha) === 0 ? 'hoy' : diff(fecha) === 1 ? 'manana' : diff(fecha) <= 7 ? 'semana' : tab;
+  $('form').close();
+  render();
+});
+$('fTipo').innerHTML = Object.entries(TIPOS).map(([k, v]) => `<option value="${k}">${v.label}</option>`).join('');
+$('bizName').textContent = NEGOCIO.nombre;
+render();
+</script>
+</body>
+</html>

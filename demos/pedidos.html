@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pedidos por WhatsApp | Demo Nube Andina</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="../assets/nube-andina-avatar.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="demo.css">
+<style>
+:root{--brand:#6b3f22;--brand-soft:#f5ece3}
+.feat{display:flex;gap:12px;overflow-x:auto;padding:16px 18px 4px;scrollbar-width:none}
+.feat::-webkit-scrollbar{display:none}
+.feat article{flex:0 0 148px;background:var(--surface);border-radius:var(--r);overflow:hidden;border:1px solid var(--line)}
+.feat img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.feat div{padding:9px 11px 11px}
+.feat h3{font-size:.88rem}
+.feat .p{font-size:.84rem;color:var(--muted);margin:2px 0 8px}
+.tabs{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:8px;padding:12px 18px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{flex:none;font-size:.86rem;font-weight:500;padding:7px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+.cat{padding:6px 18px 8px;scroll-margin-top:56px}
+.cat h2{font-size:1.02rem;margin:8px 0}
+.item{display:flex;justify-content:space-between;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;margin-bottom:8px}
+.item h3{font-size:.95rem}
+.item p{font-size:.82rem;color:var(--muted)}
+.item b{display:block;font-size:.9rem;margin-top:3px;font-weight:600}
+.add{font-size:.85rem;font-weight:600;color:var(--brand);background:var(--brand-soft);padding:8px 14px;border-radius:9px;width:100%}
+.step{display:flex;align-items:center;gap:4px;flex:none}
+.step button{width:32px;height:32px;border-radius:9px;background:var(--brand-soft);color:var(--brand);font-size:1.15rem;font-weight:600;line-height:1}
+.step span{min-width:24px;text-align:center;font-weight:600;font-size:.92rem}
+.item .add{width:auto;flex:none}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:10;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 35%)}
+.bar .btn{max-width:492px;margin:0 auto;justify-content:space-between;box-shadow:0 10px 26px rgba(40,20,5,.3)}
+.line-i{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.opts label{border:1px solid var(--line);border-radius:10px;padding:11px;font-size:.88rem;font-weight:500;cursor:pointer;display:block;text-align:center}
+.opts input{position:absolute;opacity:0}
+.opts label:has(input:checked){border-color:var(--brand);background:var(--brand-soft);color:var(--brand)}
+.opts label:has(input:focus-visible){outline:2px solid var(--brand);outline-offset:2px}
+.total{display:flex;justify-content:space-between;font-weight:700;font-size:1.05rem;margin:14px 0}
+.sum{display:flex;justify-content:space-between;font-size:.86rem;color:var(--muted);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="demobar"><span><b>DEMO</b> · Negocio de ejemplo</span><a href="../index.html">Hecho por Nube Andina</a></div>
+<main class="app">
+  <header class="biz"><h1 id="bizName"></h1><p>Pedí desde tu celular. Te llega todo por WhatsApp.</p></header>
+  <section class="feat" id="feat" aria-label="Destacados"></section>
+  <nav class="tabs" id="tabs" aria-label="Categorías"></nav>
+  <div id="menu"></div>
+</main>
+<div class="bar" id="bar" hidden><button class="btn" id="open"><span id="barCount"></span><span>Ver pedido</span><span id="barTotal"></span></button></div>
+
+<dialog class="sheet" id="sheet"><div class="sheet-in">
+  <div class="sheet-head"><h2>Tu pedido</h2><button class="x" data-close aria-label="Cerrar">×</button></div>
+  <div id="lines"></div>
+  <div class="opts">
+    <label><input type="radio" name="entrega" value="retiro" checked>Retiro en el local</label>
+    <label><input type="radio" name="entrega" value="delivery">Delivery</label>
+  </div>
+  <label class="field"><span>Tu nombre</span><input id="nombre" autocomplete="name"></label>
+  <label class="field" id="dirBox" hidden><span>Dirección de entrega</span><input id="dir" autocomplete="street-address"></label>
+  <label class="field"><span>Nota (opcional)</span><input id="nota" placeholder="Sin azúcar, sin picante..."></label>
+  <div class="sum" id="envioRow" hidden><span>Delivery</span><span id="envio"></span></div>
+  <div class="total"><span>Total</span><span id="total"></span></div>
+  <p class="err" id="err" role="alert"></p>
+  <button class="btn wa" id="send"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.9-1.1-4.7-4-4.9-4.2-.1-.2-1.2-1.6-1.2-3s.8-2.2 1-2.5c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.1 1.4z"/></svg>Enviar pedido por WhatsApp</button>
+</div></dialog>
+
+<dialog class="sheet" id="done"><div class="sheet-in">
+  <div class="sheet-head"><h2>¡Pedido listo!</h2><button class="x" data-close aria-label="Cerrar">×</button></div>
+  <div class="chat"><small id="doneFor"></small><div class="bubble" id="bubble"></div></div>
+  <button class="btn" id="again">Hacer otro pedido</button>
+  <p class="note">Esto es una demo. En la versión real, este mensaje se abre en WhatsApp y llega directo al negocio.</p>
+</div></dialog>
+
+<script>
+// Per-client settings. whatsapp: international format, digits only ('' = demo, shows the message instead of opening WhatsApp).
+const NEGOCIO = { nombre: 'Café La Cumbre', whatsapp: '', envio: 8 };
+const PRODUCTOS = [
+  { id: 'saltena', cat: 'Salteñas y masitas', nombre: 'Salteña de pollo', desc: 'Horneada al momento', precio: 9, img: '../assets/port/f3d-saltena.jpg' },
+  { id: 'saltena-c', cat: 'Salteñas y masitas', nombre: 'Salteña de carne', desc: 'Jugosa y picantita', precio: 9 },
+  { id: 'cunape', cat: 'Salteñas y masitas', nombre: 'Cuñapé', desc: 'Con queso, recién salido', precio: 5 },
+  { id: 'croissant', cat: 'Salteñas y masitas', nombre: 'Café y croissant', desc: 'Combo de la mañana', precio: 24, img: '../assets/port/f3d-cafe.jpg' },
+  { id: 'americano', cat: 'Cafés', nombre: 'Americano', desc: 'Grano de los Yungas', precio: 12 },
+  { id: 'latte', cat: 'Cafés', nombre: 'Café latte', desc: 'Con leche cremosa', precio: 16 },
+  { id: 'capuchino', cat: 'Cafés', nombre: 'Capuchino', desc: 'Con canela', precio: 16 },
+  { id: 'api', cat: 'Bebidas', nombre: 'Api con pastel', desc: 'Morado y blanco', precio: 15, img: '../assets/port/f3d-api.jpg' },
+  { id: 'jugo', cat: 'Bebidas', nombre: 'Jugo de naranja', desc: 'Exprimido', precio: 12 },
+  { id: 'limonada', cat: 'Bebidas', nombre: 'Limonada', desc: 'Con hierbabuena', precio: 10 },
+];
+
+const $ = id => document.getElementById(id), bs = n => 'Bs ' + n, cart = {};
+const slug = s => s.toLowerCase().normalize('NFD').replace(/[^a-z]/g, '');
+const count = () => Object.values(cart).reduce((a, b) => a + b, 0);
+const subtotal = () => PRODUCTOS.reduce((a, p) => a + (cart[p.id] || 0) * p.precio, 0);
+const isDelivery = () => document.querySelector('[name=entrega]:checked').value === 'delivery';
+const control = p => cart[p.id] ? `<div class="step"><button data-minus="${p.id}" aria-label="Quitar ${p.nombre}">−</button><span>${cart[p.id]}</span><button data-plus="${p.id}" aria-label="Agregar ${p.nombre}">+</button></div>` : `<button class="add" data-plus="${p.id}">Agregar</button>`;
+
+function render() {
+  $('feat').innerHTML = PRODUCTOS.filter(p => p.img).map(p => `<article><img src="${p.img}" alt="${p.nombre}"><div><h3>${p.nombre}</h3><p class="p">${bs(p.precio)}</p>${control(p)}</div></article>`).join('');
+  const cats = [...new Set(PRODUCTOS.map(p => p.cat))];
+  $('tabs').innerHTML = cats.map(c => `<a href="#${slug(c)}">${c}</a>`).join('');
+  $('menu').innerHTML = cats.map(c => `<section class="cat" id="${slug(c)}"><h2>${c}</h2>${PRODUCTOS.filter(p => p.cat === c).map(p => `<div class="item"><div><h3>${p.nombre}</h3><p>${p.desc}</p><b>${bs(p.precio)}</b></div>${control(p)}</div>`).join('')}</section>`).join('');
+  const n = count();
+  $('bar').hidden = !n;
+  $('barCount').textContent = n + (n === 1 ? ' producto' : ' productos');
+  $('barTotal').textContent = bs(subtotal());
+  renderSheet();
+}
+function renderSheet() {
+  $('lines').innerHTML = PRODUCTOS.filter(p => cart[p.id]).map(p => `<div class="line-i"><span>${p.nombre}<br><small style="color:var(--muted)">${bs(p.precio * cart[p.id])}</small></span>${control(p)}</div>`).join('');
+  const d = isDelivery();
+  $('dirBox').hidden = !d; $('envioRow').hidden = !d;
+  $('envio').textContent = bs(NEGOCIO.envio);
+  $('total').textContent = bs(subtotal() + (d ? NEGOCIO.envio : 0));
+}
+function message() {
+  const d = isDelivery(), lines = PRODUCTOS.filter(p => cart[p.id]).map(p => `• ${cart[p.id]} x ${p.nombre} (${bs(p.precio * cart[p.id])})`);
+  const note = $('nota').value.trim();
+  return [`Hola ${NEGOCIO.nombre}, quiero hacer un pedido:`, '', ...lines, '', d ? `Delivery: ${bs(NEGOCIO.envio)}` : 'Retiro en el local', `*Total: ${bs(subtotal() + (d ? NEGOCIO.envio : 0))}*`, '', `Nombre: ${$('nombre').value.trim()}`, ...(d ? [`Dirección: ${$('dir').value.trim()}`] : []), ...(note ? [`Nota: ${note}`] : [])].join('\n');
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-plus],[data-minus],[data-close]');
+  if (!t) return;
+  if (t.dataset.close !== undefined) return t.closest('dialog').close();
+  if (t.dataset.plus) cart[t.dataset.plus] = (cart[t.dataset.plus] || 0) + 1;
+  else if (!--cart[t.dataset.minus]) delete cart[t.dataset.minus];
+  render();
+  if (!count() && $('sheet').open) $('sheet').close();
+});
+document.querySelectorAll('[name=entrega]').forEach(r => r.addEventListener('change', renderSheet));
+$('open').addEventListener('click', () => { $('err').textContent = ''; $('sheet').showModal(); });
+$('send').addEventListener('click', () => {
+  if (!$('nombre').value.trim()) { $('err').textContent = 'Escribí tu nombre.'; return $('nombre').focus(); }
+  if (isDelivery() && !$('dir').value.trim()) { $('err').textContent = 'Escribí la dirección de entrega.'; return $('dir').focus(); }
+  const msg = message();
+  if (NEGOCIO.whatsapp) { window.open(`https://wa.me/${NEGOCIO.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener'); return; }
+  $('sheet').close();
+  $('doneFor').textContent = 'Así le llega a ' + NEGOCIO.nombre;
+  $('bubble').textContent = msg.replace(/\*/g, ''); // WhatsApp shows *text* as bold
+  $('done').showModal();
+});
+$('again').addEventListener('click', () => { Object.keys(cart).forEach(k => delete cart[k]); $('nota').value = ''; $('done').close(); render(); });
+$('bizName').textContent = NEGOCIO.nombre;
+render();
+</script>
+</body>
+</html>
